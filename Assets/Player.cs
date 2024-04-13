@@ -21,10 +21,13 @@ public class Player : MonoBehaviour
     private Animator animator;
     
     public float healPower;
+    public bool canMove;
+    public int turnDuration;
     
     public static event Action<Waypoint> activeWaypointEvent;
     public static event Action onSwitchedLoopEvent;
     public static event Action<float> onHealthChangedEvent;
+    public static event Action<int> TurnSunStoneEvent;
 
     private void OnEnable()
     {
@@ -49,6 +52,11 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (!canMove)
+        {
+            //TODO: Stand still animation
+            return;
+        }
         transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, speed * Time.deltaTime);
         if (transform.position == currentWaypoint.position)
         {
@@ -138,6 +146,11 @@ public class Player : MonoBehaviour
         {
             WaterFlower(other.GetComponent<Flower>());
         }
+        
+        if (other.CompareTag("SunStone"))
+        {
+            StartCoroutine(TurnSunStone());
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -152,6 +165,22 @@ public class Player : MonoBehaviour
         
         //Clamp the health of the flower
         if (flower.health > flower.maxHealth) flower.health = flower.maxHealth;
+    }
+    
+    IEnumerator TurnSunStone()
+    {
+        TurnSunStoneEvent?.Invoke(turnDuration);
+        
+        canMove = false;
+        int tempDir = 4;
+        animator.SetInteger("dir", tempDir);
+        animator.SetTrigger("dirChange");
+        
+        yield return new WaitForSeconds(turnDuration);
+        
+        canMove = true;
+        animator.SetInteger("dir", direction);
+        animator.SetTrigger("dirChange");
     }
     
     void ChangeHealth(float healthValue)
