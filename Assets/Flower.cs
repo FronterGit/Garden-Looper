@@ -38,6 +38,7 @@ public class Flower : MonoBehaviour
         if (health <= 0)
         {
             Debug.Log("Flower has died");
+            onDeath?.Invoke(this);
             Destroy(gameObject);
         }
 
@@ -49,10 +50,5 @@ public class Flower : MonoBehaviour
         Color.RGBToHSV(spriteRenderer.color, out hColor, out sColor, out vColor);
         Color newColor = Color.HSVToRGB(hColor, sColor, health / maxHealth, false);
         spriteRenderer.color = newColor;
-    }
-
-    private void OnDestroy()
-    {
-        onDeath?.Invoke(this);
     }
 }

@@ -23,7 +23,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 1
-  controlID: 53571
+  controlID: 54366
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -88,10 +88,10 @@ MonoBehaviour:
     m_VAllowExceedBaseRangeMin: 1
     m_VAllowExceedBaseRangeMax: 1
     m_ScaleWithWindow: 0
-    m_HSlider: 1
-    m_VSlider: 1
+    m_HSlider: 0
+    m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -102,18 +102,18 @@ MonoBehaviour:
       y: 21
       width: 668
       height: 566
-    m_Scale: {x: 3.404864, y: 3.4048643}
-    m_Translation: {x: -259.75635, y: 32.746105}
+    m_Scale: {x: 1, y: 1}
+    m_Translation: {x: 334, y: 283}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: 76.28979
-      y: -9.617448
-      width: 196.18991
-      height: 166.23276
+      x: -334
+      y: -283
+      width: 668
+      height: 566
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_LastWindowPixelSize: {x: 668, y: 587}
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 53572
+  controlID: 54367
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 53573
+  controlID: 54368
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 50}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
-  controlID: 53574
+  controlID: 54369
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -803,7 +803,7 @@ MonoBehaviour:
   m_Position:
     m_Target: {x: 4.9140596, y: -3.1951063, z: 0.0004499464}
     speed: 2
-    m_Value: {x: 4.9109583, y: -3.2071505, z: -0.000000055442797}
+    m_Value: {x: 4.9140596, y: -3.1951063, z: 0.0004499464}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -855,7 +855,7 @@ MonoBehaviour:
   m_Size:
     m_Target: 0.61542803
     speed: 2
-    m_Value: 0.64442724
+    m_Value: 0.61542803
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1137,7 +1137,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Art
+    - Assets/Art/Materials
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1145,7 +1145,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Art
+  - Assets/Art/Materials
   m_LastFoldersGridSize: 96
   m_LastProjectPath: C:\Users\mathi\Documents\Game Development\Game Jams\mini Jam
     1304\Mini Jam\Garden Looper
@@ -1153,9 +1153,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 809f0000
-    m_LastClickedID: 40832
-    m_ExpandedIDs: 000000008661000000ca9a3b
+    m_SelectedIDs: 7cda0000
+    m_LastClickedID: 55932
+    m_ExpandedIDs: 0000000086610000809f000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1210,7 +1210,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 6ed90000
     m_LastClickedInstanceID: 55662
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c62300001ae100003403000000000000708a00005c5f000074670000fe760000f6760000fa760000027700000e880000b4c400001e570100fec80000c2c80000c4cd000074c80000dc81000060860000d0810000de7b00006ac20000269800001ed5000084da0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1235,7 +1235,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 8}
+    m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 96
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 266
