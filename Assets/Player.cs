@@ -14,25 +14,33 @@ public class Player : MonoBehaviour
     public Transform nextWaypoint;
     public Waypoint potentialWaypoint;
     
+    public float health;
+    public float maxHealth;
+    
     public float healPower;
     
     public static event Action<Waypoint> activeWaypointEvent;
     public static event Action onSwitchedLoopEvent;
+    public static event Action<float> onHealthChangedEvent;
 
     private void OnEnable()
     {
         UIManager.switchLoopEvent += SwitchLoop;
+        FlowerManager.flowerDeathEvent += ChangeHealth;
     }
     
     private void OnDisable()
     {
         UIManager.switchLoopEvent -= SwitchLoop;
+        FlowerManager.flowerDeathEvent -= ChangeHealth;
     }
 
     private void Start()
     {
         //Invoke the event to activate the first waypoint
         activeWaypointEvent?.Invoke(currentWaypoint.GetComponent<Waypoint>());
+        
+        health = maxHealth;
     }
 
     private void Update()
@@ -106,7 +114,19 @@ public class Player : MonoBehaviour
     
     void WaterFlower(Flower flower)
     {
+        //Heal the flower
         flower.health += healPower;
+        
+        //Clamp the health of the flower
         if (flower.health > flower.maxHealth) flower.health = flower.maxHealth;
+    }
+    
+    void ChangeHealth(float healthValue)
+    {
+        //Change the health of the player
+        health += healthValue;
+        
+        //Invoke the event to update the health UI
+        onHealthChangedEvent?.Invoke(health);
     }
 }
