@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     public Transform nextWaypoint;
     public Waypoint potentialWaypoint;
     
+    public float healPower;
+    
     public static event Action<Waypoint> activeWaypointEvent;
     public static event Action onSwitchedLoopEvent;
 
@@ -54,8 +56,8 @@ public class Player : MonoBehaviour
             //If hit a waypoint that is not the active waypoint
             if (!other.GetComponent<Waypoint>().isActiveWaypoint)
             {
-                //If we don't want to switch, ignore the waypoint
-                if (!switchLoop) return;
+                //If we don't want to switch or the waypoint is not a starting waypoint, ignore the waypoint
+                if (!switchLoop || !other.GetComponent<Waypoint>().isStartWaypoint) return;
                 currentWaypoint = other.transform;
                 
                 //Set it as potential waypoint
@@ -90,10 +92,21 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        
+        if (other.CompareTag("Flower"))
+        {
+            WaterFlower(other.GetComponent<Flower>());
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         potentialWaypoint = null;
+    }
+    
+    void WaterFlower(Flower flower)
+    {
+        flower.health += healPower;
+        if (flower.health > flower.maxHealth) flower.health = flower.maxHealth;
     }
 }
