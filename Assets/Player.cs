@@ -16,6 +16,9 @@ public class Player : MonoBehaviour
     
     public float health;
     public float maxHealth;
+
+    private int direction;
+    private Animator animator;
     
     public float healPower;
     
@@ -39,6 +42,7 @@ public class Player : MonoBehaviour
     {
         //Invoke the event to activate the first waypoint
         activeWaypointEvent?.Invoke(currentWaypoint.GetComponent<Waypoint>());
+        animator = GetComponent<Animator>();
         
         health = maxHealth;
     }
@@ -49,9 +53,38 @@ public class Player : MonoBehaviour
         if (transform.position == currentWaypoint.position)
         {
             currentWaypoint = nextWaypoint;
+            
+            //Calculate the direction of the player
+            CalcDir();
+            
+            //Set the direction of the player in the animator
+            animator.SetInteger("dir", direction);
+            animator.SetTrigger("dirChange");
+        }
+
+    }
+
+    private void CalcDir()
+    {
+        //Calculate the direction of the player
+        if (transform.position.y < currentWaypoint.position.y && transform.position.x == currentWaypoint.position.x)
+        {
+            direction = 0;
+        }
+        else if (transform.position.x < currentWaypoint.position.x && transform.position.y == currentWaypoint.position.y)
+        {
+            direction = 1;
+        }
+        else if (transform.position.y > currentWaypoint.position.y && transform.position.x == currentWaypoint.position.x)
+        {
+            direction = 2;
+        }
+        else if (transform.position.x > currentWaypoint.position.x && transform.position.y == currentWaypoint.position.y)
+        {
+            direction = 3;
         }
     }
-    
+
     void SwitchLoop()
     {
         switchLoop = true;
