@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.PlasticSCM.Editor.UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -21,6 +20,8 @@ public class Player : MonoBehaviour
     private int direction;
     private Animator animator;
     
+    [SerializeField] private GameObject defeatScreen;
+    
     public float healPower;
     public bool canMove;
     [FormerlySerializedAs("turnDuration")] public int turnSunStoneDuration;
@@ -29,17 +30,20 @@ public class Player : MonoBehaviour
     public static event Action onSwitchedLoopEvent;
     public static event Action<float> onHealthChangedEvent;
     public static event Action<int> TurnSunStoneEvent;
+    public static event Action defeatEvent;
 
     private void OnEnable()
     {
         UIManager.switchLoopEvent += SwitchLoop;
         FlowerManager.flowerDeathEvent += ChangeHealth;
+        TimeManager.timeUpEvent += Defeat;
     }
     
     private void OnDisable()
     {
         UIManager.switchLoopEvent -= SwitchLoop;
         FlowerManager.flowerDeathEvent -= ChangeHealth;
+        TimeManager.timeUpEvent -= Defeat;
     }
 
     private void Start()
@@ -169,11 +173,16 @@ public class Player : MonoBehaviour
         if (flower.health > flower.maxHealth) flower.health = flower.maxHealth;
         
         flower.GetWatered();
+
+        if (AudioManager.instance == null) return;
+        AudioManager.instance.PlaySound("Heal");
     }
     
     IEnumerator TurnSunStone()
     {
         TurnSunStoneEvent?.Invoke(turnSunStoneDuration);
+        
+        AudioManager.instance.PlaySound("SunStoneTurn");
         
         canMove = false;
         int tempDir = 4;
@@ -194,5 +203,18 @@ public class Player : MonoBehaviour
         
         //Invoke the event to update the health UI
         onHealthChangedEvent?.Invoke(health);
+        
+        //If the health is 0, the player is defeated
+        if (health <= 0)
+        {
+            Defeat();
+        }
+    }
+    
+    void Defeat()
+    {
+        defeatScreen.SetActive(true);
+        defeatEvent?.Invoke();
+        GetComponent<BoxCollider2D>().enabled = false;
     }
 }

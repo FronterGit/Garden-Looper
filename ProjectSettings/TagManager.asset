@@ -8,6 +8,10 @@ TagManager:
   - Flower
   - SunStone
   - Wall
+  - MusicSlider
+  - SFXSlider
+  - TutorialToggle
+  - Tutorial
   layers:
   - Default
   - TransparentFX

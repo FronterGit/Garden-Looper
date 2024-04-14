@@ -8,6 +8,8 @@ public class Flower : MonoBehaviour
     public float health;
     public float maxHealth;
     public SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite graveSprite;
+    public bool dead;
 
     public event Action<Flower> onDeath;
 
@@ -26,11 +28,13 @@ public class Flower : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         health = maxHealth;
         
-        FlowerManager.instance.AddFlower(this);
+        if(FlowerManager.instance != null) FlowerManager.instance.AddFlower(this);
     }
     
     void Step()
     {
+        if (dead) return;
+        
         //Step the health of the flower
         health--;
         
@@ -39,7 +43,13 @@ public class Flower : MonoBehaviour
         {
             Debug.Log("Flower has died");
             onDeath?.Invoke(this);
-            Destroy(gameObject);
+            spriteRenderer.sprite = graveSprite;
+            SetColorBack();
+            dead = true;
+            transform.localScale *= 0.85f;
+            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<ParticleSystem>().Stop();
+            return;
         }
         
         //Change the color of the flower based on its health
@@ -49,6 +59,11 @@ public class Flower : MonoBehaviour
         Color.RGBToHSV(spriteRenderer.color, out hColor, out sColor, out vColor);
         Color newColor = Color.HSVToRGB(hColor, sColor, health / maxHealth, false);
         spriteRenderer.color = newColor;
+    }
+    
+    public void SetColorBack()
+    {
+        spriteRenderer.color = Color.white;
     }
 
     public void GetWatered()

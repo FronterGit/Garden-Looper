@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -22,7 +23,14 @@ public class UIManager : MonoBehaviour
     private Quaternion currentRotation;
     private Quaternion targetRotation;
     private float stepSize;
+    
+    [SerializeField] private Sprite buttonSprite;
+    [SerializeField] private Sprite buttonSpritePressed;
+    [SerializeField] private TMPro.TMP_Text buttonText;
     public static event System.Action switchLoopEvent;
+    private bool switchLoop = false;
+    
+    [SerializeField] private GameObject victoryScreen;
     
 
     private void OnEnable()
@@ -45,13 +53,16 @@ public class UIManager : MonoBehaviour
 
     public void OnSwitchLoopPressed()
     {
+        if (switchLoop) return;
         switchLoopEvent?.Invoke();
-        switchLoopButton.GetComponent<Image>().color = switchLoopOnColor;
+        switchLoopButton.GetComponent<Image>().sprite = buttonSpritePressed;
+        switchLoop = true;
     }
     
     public void OnPlayerSwitchedLoop()
     {
-        switchLoopButton.GetComponent<Image>().color = switchLoopOffColor;
+        switchLoopButton.GetComponent<Image>().sprite = buttonSprite;
+        switchLoop = false;
     }
     
     public void UpdateHealth(float healthValue)
@@ -90,6 +101,16 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            OnSwitchLoopPressed();
+        }
+        
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            BackToMainMenu();
+        }
+        
         sunPivot.transform.rotation = Quaternion.RotateTowards(sunPivot.transform.rotation, targetRotation, stepSize * Time.deltaTime);
         
         if (fadeExpansionPrompt)
@@ -125,5 +146,15 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(expansionPromptTime);
         fadeExpansionPrompt = true;
+    }
+    
+    public void CloseTutorial()
+    {
+        TutorialManager.instance.CloseTutorial();
+    }
+    
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
     }
 }

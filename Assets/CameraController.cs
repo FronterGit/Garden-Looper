@@ -68,6 +68,20 @@ public class CameraController : MonoBehaviour
         }
         
         transform.position += (Vector3)direction * (factor * Time.deltaTime);
+        
+        //Zoom out when mouse wheel is scrolled down
+        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            if (Camera.main.orthographicSize >= 9) return;
+            Camera.main.orthographicSize += 1;
+        }
+        
+        //Zoom in when mouse wheel is scrolled up
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            if (Camera.main.orthographicSize <= 6) return;
+            Camera.main.orthographicSize -= 1;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)

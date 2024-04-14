@@ -11,6 +11,10 @@ public class GardenManager : MonoBehaviour
     [SerializeField] private int index;
     [SerializeField] private int stepCount;
     
+    [SerializeField] private GameObject victoryScreen;
+    
+    public static event System.Action victoryEvent;
+    
     // Start is called before the first frame update
     private void OnEnable()
     {
@@ -40,6 +44,8 @@ public class GardenManager : MonoBehaviour
             if (index >= expansions.Count)
             {
                 Debug.Log("Game Over");
+                victoryScreen.SetActive(true);
+                victoryEvent?.Invoke();
                 return;
             }
             stepCount = expansions[index].stepCount;

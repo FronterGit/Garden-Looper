@@ -29,6 +29,7 @@ public class FlowerManager : MonoBehaviour
     {
         flowers.Remove(flower);
         flower.onDeath -= RemoveFlower;
+        if(AudioManager.instance != null) AudioManager.instance.PlaySound("FlowerDeath");
         
         flowerDeathEvent?.Invoke(-1);
     }

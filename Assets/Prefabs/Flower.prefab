@@ -56,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0f4d47b5e7956a84eb3a619a0262eebd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,8 +101,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 120
+  maxHealth: 110
   spriteRenderer: {fileID: 0}
+  graveSprite: {fileID: 746243270, guid: b02be4de00121da4f9a9859847669d04, type: 3}
+  dead: 0
 --- !u!61 &1935363233618734878
 BoxCollider2D:
   m_ObjectHideFlags: 0

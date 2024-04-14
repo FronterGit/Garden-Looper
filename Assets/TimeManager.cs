@@ -13,14 +13,19 @@ public class TimeManager : MonoBehaviour
 
     public static event System.Action stepEvent;
     public static event System.Action afterTimeResetEvent;
+    public static event System.Action timeUpEvent;
 
     private void OnEnable()
     {
         Player.TurnSunStoneEvent += OnPlayerTurnSunStone;
+        GardenManager.victoryEvent += () => ticking = false;
+        Player.defeatEvent += () => ticking = false;
     }
     
     private void OnDisable()
     {
+        GardenManager.victoryEvent -= () => ticking = false;
+        Player.defeatEvent -= () => ticking = false;
         Player.TurnSunStoneEvent -= OnPlayerTurnSunStone;
     }
 
@@ -40,6 +45,7 @@ public class TimeManager : MonoBehaviour
             if(time <= 0)
             {
                 Debug.Log("Time's up!");
+                timeUpEvent?.Invoke();
             }
             yield return new WaitForSeconds(step);
             stepEvent?.Invoke();
