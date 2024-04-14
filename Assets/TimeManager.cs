@@ -24,7 +24,7 @@ public class TimeManager : MonoBehaviour
         Player.TurnSunStoneEvent -= OnPlayerTurnSunStone;
     }
 
-    void Start()
+    void Awake()
     {
         time = startTime;
         staticStartTime = startTime;

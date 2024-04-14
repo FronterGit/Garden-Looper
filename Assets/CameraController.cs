@@ -8,9 +8,31 @@ public class CameraController : MonoBehaviour
     private bool transforming;
     private Vector2 direction;
     [SerializeField] private float factor = 1f;
+    [SerializeField] private bool border;
+    
+    [SerializeField] public GameObject[] walls;
+
+    private void OnEnable()
+    {
+        GardenManager.onGardenExpansion += OnGardenExpansion;
+    }
+    
+    private void OnDisable()
+    {
+        GardenManager.onGardenExpansion -= OnGardenExpansion;
+    }
 
     void Update()
     {
+        //If no key is pressed, reset direction
+        if (!Input.anyKey)
+        {
+            border = false;
+            direction = Vector2.zero;
+        }
+        
+        if(border) return;
+        
         if (Input.GetKeyDown(KeyCode.W))
         {
             direction += Vector2.up;
@@ -45,19 +67,30 @@ public class CameraController : MonoBehaviour
             direction -= Vector2.right;
         }
         
-        //If no key is pressed, reset direction
-        if (!Input.anyKey)
-        {
-            direction = Vector2.zero;
-        }
-        
         transform.position += (Vector3)direction * (factor * Time.deltaTime);
-        
-        
     }
 
-    private void FixedUpdate()
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            border = true;
+        }
     }
+
+    void OnGardenExpansion(GameObject[] cameraBounds)
+    {
+        foreach (var wall in walls)
+        {
+            Destroy(wall);
+        }
+        
+        walls = cameraBounds;
+        
+        foreach (var wall in walls)
+        {
+            wall.SetActive(true);
+        }
+    }
+
 }
