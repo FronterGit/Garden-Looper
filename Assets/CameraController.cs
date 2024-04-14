@@ -51,11 +51,13 @@ public class CameraController : MonoBehaviour
             direction = Vector2.zero;
         }
         
+        transform.position += (Vector3)direction * (factor * Time.deltaTime);
+        
         
     }
 
     private void FixedUpdate()
     {
-        transform.position += (Vector3)direction * factor;
+        
     }
 }

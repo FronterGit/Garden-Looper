@@ -13,12 +13,12 @@ public class Flower : MonoBehaviour
 
     private void OnEnable()
     {
-        TimeManager.decayEvent += Decay;
+        TimeManager.stepEvent += Step;
     }
     
     private void OnDisable()
     {
-        TimeManager.decayEvent -= Decay;
+        TimeManager.stepEvent -= Step;
     }
 
     void Start()
@@ -29,9 +29,9 @@ public class Flower : MonoBehaviour
         FlowerManager.instance.AddFlower(this);
     }
     
-    void Decay()
+    void Step()
     {
-        //Decay the health of the flower
+        //Step the health of the flower
         health--;
         
         //If the health is 0 or less, destroy the flower

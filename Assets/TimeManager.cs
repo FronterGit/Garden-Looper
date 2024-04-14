@@ -6,10 +6,13 @@ using UnityEngine;
 public class TimeManager : MonoBehaviour
 {
     public float step;
-    public int time;
+    public int startTime;
+    public static int staticStartTime;
+    public static int time;
     public bool ticking = true;
 
-    public static event System.Action decayEvent;
+    public static event System.Action stepEvent;
+    public static event System.Action afterTimeResetEvent;
 
     private void OnEnable()
     {
@@ -23,7 +26,10 @@ public class TimeManager : MonoBehaviour
 
     void Start()
     {
+        time = startTime;
+        staticStartTime = startTime;
         StartCoroutine(Step());
+        
     }
     
     IEnumerator Step()
@@ -36,7 +42,7 @@ public class TimeManager : MonoBehaviour
                 Debug.Log("Time's up!");
             }
             yield return new WaitForSeconds(step);
-            decayEvent?.Invoke();
+            stepEvent?.Invoke();
         }
     }
     void OnPlayerTurnSunStone(int wait)
@@ -47,10 +53,20 @@ public class TimeManager : MonoBehaviour
     
     IEnumerator ResetTime(int wait)
     {
+        //Wait for the player to turn the sun stone
         yield return new WaitForSeconds(wait);
-        time = 100;
-        ticking = true;
         
+        //Reset the time
+        time = startTime;
+        
+        //For debug purposes
+        staticStartTime = startTime;
+        
+        //Invoke the afterTimeResetEvent
+        afterTimeResetEvent?.Invoke();
+        
+        //Start the time again
+        ticking = true;
         StartCoroutine(Step());
     }
 }
