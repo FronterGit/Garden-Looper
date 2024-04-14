@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.PlasticSCM.Editor.UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class Player : MonoBehaviour
     
     public float healPower;
     public bool canMove;
-    public int turnDuration;
+    [FormerlySerializedAs("turnDuration")] public int turnSunStoneDuration;
     
     public static event Action<Waypoint> activeWaypointEvent;
     public static event Action onSwitchedLoopEvent;
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour
             //TODO: Stand still animation
             return;
         }
+
         transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, speed * Time.deltaTime);
         if (transform.position == currentWaypoint.position)
         {
@@ -64,7 +66,7 @@ public class Player : MonoBehaviour
             
             //Calculate the direction of the player
             CalcDir();
-            
+
             //Set the direction of the player in the animator
             animator.SetInteger("dir", direction);
             animator.SetTrigger("dirChange");
@@ -75,19 +77,19 @@ public class Player : MonoBehaviour
     private void CalcDir()
     {
         //Calculate the direction of the player
-        if (transform.position.y < currentWaypoint.position.y && transform.position.x == currentWaypoint.position.x)
+        if (transform.position.y < currentWaypoint.position.y && Math.Abs(transform.position.x - currentWaypoint.position.x) < 0.1f)
         {
             direction = 0;
         }
-        else if (transform.position.x < currentWaypoint.position.x && transform.position.y == currentWaypoint.position.y)
+        else if (transform.position.x < currentWaypoint.position.x && Math.Abs(transform.position.y - currentWaypoint.position.y) < 0.1f)
         {
             direction = 1;
         }
-        else if (transform.position.y > currentWaypoint.position.y && transform.position.x == currentWaypoint.position.x)
+        else if (transform.position.y > currentWaypoint.position.y && Math.Abs(transform.position.x - currentWaypoint.position.x) < 0.1f)
         {
             direction = 2;
         }
-        else if (transform.position.x > currentWaypoint.position.x && transform.position.y == currentWaypoint.position.y)
+        else if (transform.position.x > currentWaypoint.position.x && Math.Abs(transform.position.y - currentWaypoint.position.y) < 0.1f)
         {
             direction = 3;
         }
@@ -106,13 +108,13 @@ public class Player : MonoBehaviour
             if (!other.GetComponent<Waypoint>().isActiveWaypoint)
             {
                 //If we don't want to switch or the waypoint is not a starting waypoint, ignore the waypoint
-                if (!switchLoop || !other.GetComponent<Waypoint>().isStartWaypoint) return;
+                if (!switchLoop || !other.GetComponent<Waypoint>().isEntryWaypoint) return;
                 currentWaypoint = other.transform;
                 
                 //Set it as potential waypoint
                 if (potentialWaypoint == null) potentialWaypoint = other.GetComponent<Waypoint>();
                 //If that waypoint is the start of a new loop
-                if (potentialWaypoint.isStartWaypoint)
+                if (potentialWaypoint.isEntryWaypoint)
                 {
                     nextWaypoint = potentialWaypoint.baseNextWaypoint;
                     //Invoke the event to activate the new base waypoint
@@ -165,18 +167,20 @@ public class Player : MonoBehaviour
         
         //Clamp the health of the flower
         if (flower.health > flower.maxHealth) flower.health = flower.maxHealth;
+        
+        flower.GetWatered();
     }
     
     IEnumerator TurnSunStone()
     {
-        TurnSunStoneEvent?.Invoke(turnDuration);
+        TurnSunStoneEvent?.Invoke(turnSunStoneDuration);
         
         canMove = false;
         int tempDir = 4;
         animator.SetInteger("dir", tempDir);
         animator.SetTrigger("dirChange");
         
-        yield return new WaitForSeconds(turnDuration);
+        yield return new WaitForSeconds(turnSunStoneDuration);
         
         canMove = true;
         animator.SetInteger("dir", direction);

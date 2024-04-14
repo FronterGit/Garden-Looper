@@ -10,7 +10,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float factor = 1f;
     [SerializeField] private bool border;
     
-    [SerializeField] public GameObject[] walls;
+    [SerializeField] public GameObject walls;
 
     private void OnEnable()
     {
@@ -78,19 +78,13 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void OnGardenExpansion(GameObject[] cameraBounds)
+    void OnGardenExpansion(GameObject cameraBounds)
     {
-        foreach (var wall in walls)
-        {
-            Destroy(wall);
-        }
+        Destroy(walls);
         
         walls = cameraBounds;
         
-        foreach (var wall in walls)
-        {
-            wall.SetActive(true);
-        }
+        walls.SetActive(true);
     }
 
 }

@@ -41,9 +41,18 @@ public class Flower : MonoBehaviour
             onDeath?.Invoke(this);
             Destroy(gameObject);
         }
-
-        //TODO: Flower's color does not change when it's healed.
+        
         //Change the color of the flower based on its health
+        float hColor;
+        float sColor;
+        float vColor;
+        Color.RGBToHSV(spriteRenderer.color, out hColor, out sColor, out vColor);
+        Color newColor = Color.HSVToRGB(hColor, sColor, health / maxHealth, false);
+        spriteRenderer.color = newColor;
+    }
+
+    public void GetWatered()
+    {
         float hColor;
         float sColor;
         float vColor;

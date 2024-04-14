@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
@@ -8,34 +9,70 @@ namespace WorldTime
     [RequireComponent(typeof(Light2D))]
     public class WorldLight : MonoBehaviour
     {
-        public float day_duration;
+        public int day_duration;
 
         [SerializeField] private Gradient gradient;
-        private Light2D _light;
-        private float _startTime;
+        private Light2D light;
+        private float startTime;
+        private float percentage;
+        private float targetDayTime;
+        private float currentTime;
+        private float stepSize;
+
+        private void OnEnable()
+        {
+            Player.TurnSunStoneEvent += OnPlayerTurnSunStone;
+            TimeManager.afterTimeResetEvent += OnAfterTimeReset;
+        }
+        
+        private void OnDisable()
+        {
+            Player.TurnSunStoneEvent -= OnPlayerTurnSunStone;
+            TimeManager.afterTimeResetEvent -= OnAfterTimeReset;
+        }
 
         private void Awake()
         {
-            _light = GetComponent<Light2D>();
-            _startTime = Time.time;
+            light = GetComponent<Light2D>();
+            startTime = Time.time;
         }
         
         private void Start()
         {
-            day_duration = (float)TimeManager.staticStartTime;
+            day_duration = TimeManager.staticStartTime;
+            percentage = 0;
+            CalculateDayTimeStep(day_duration, 1);
         }
         
         // Update is called once per frame
         void Update()
         {
-            // Calculate the time elapsed since the start time
-            var timeElapsed = Time.time - _startTime;
-            // Calculate the percentage based on the sine of the time elapsed
-            var percentage = day_duration / timeElapsed;
-            // Clamp the percentage to be between 0 and 1
-            percentage = Mathf.Clamp01(percentage);
+            //Lerp a float between current time and target time
+            percentage += stepSize * Time.deltaTime;
+            
+            light.color = gradient.Evaluate(percentage);
+        }
+        
+        void OnPlayerTurnSunStone(int wait)
+        {
+            CalculateDayTimeStep(wait, 0);
+        }
+        
+        void OnAfterTimeReset()
+        {
+            CalculateDayTimeStep(TimeManager.staticStartTime, 1);
+        }
 
-            _light.color = gradient.Evaluate(percentage);
+        void CalculateDayTimeStep(int totalTime, float target)
+        {
+            targetDayTime = target;
+
+            // Calculate the angle difference between current and target rotations
+            currentTime = percentage;
+            float percentageDifference = targetDayTime - currentTime;
+ 
+            // Calculate the step size (p)
+            stepSize = percentageDifference / totalTime;
         }
     }
 }

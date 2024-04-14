@@ -15,6 +15,9 @@ public class UIManager : MonoBehaviour
     public GameObject sunPivot;
     private float timeToTurn;
     private bool sunStoneTurned;
+    [SerializeField] private TMPro.TMP_Text expansionPrompt;
+    [SerializeField] private int expansionPromptTime = 5;
+    private bool fadeExpansionPrompt;
     
     private Quaternion currentRotation;
     private Quaternion targetRotation;
@@ -28,6 +31,7 @@ public class UIManager : MonoBehaviour
         Player.onHealthChangedEvent += UpdateHealth;
         Player.TurnSunStoneEvent += OnPlayerTurnSunStone;
         TimeManager.afterTimeResetEvent += OnAfterTimeReset;
+        GardenManager.onGardenExpansion += OnGardenExpansion;
     }
     
     private void OnDisable()
@@ -36,6 +40,7 @@ public class UIManager : MonoBehaviour
         Player.onHealthChangedEvent -= UpdateHealth;
         Player.TurnSunStoneEvent -= OnPlayerTurnSunStone;
         TimeManager.afterTimeResetEvent -= OnAfterTimeReset;
+        GardenManager.onGardenExpansion -= OnGardenExpansion;
     }
 
     public void OnSwitchLoopPressed()
@@ -79,11 +84,22 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         CalculateSunStoneRotationStep(TimeManager.staticStartTime, 180f);
+        expansionPrompt.color = Color.clear;
+        expansionPrompt.gameObject.SetActive(true);
     }
 
     private void Update()
     {
         sunPivot.transform.rotation = Quaternion.RotateTowards(sunPivot.transform.rotation, targetRotation, stepSize * Time.deltaTime);
+        
+        if (fadeExpansionPrompt)
+        {
+            expansionPrompt.color = new Color(expansionPrompt.color.r, expansionPrompt.color.g, expansionPrompt.color.b, expansionPrompt.color.a - 0.005f);
+            if (expansionPrompt.color.a <= 0.001f)
+            {
+                fadeExpansionPrompt = false;
+            }
+        }
     }
 
     void CalculateSunStoneRotationStep(int totalTime, float targetRotationAngle)
@@ -96,5 +112,18 @@ public class UIManager : MonoBehaviour
 
         // Calculate the step size (p)
         stepSize = angleDifference / totalTime;
+    }
+    
+    public void OnGardenExpansion(GameObject ignore)
+    {
+        Debug.Log("Garden expanded");
+        expansionPrompt.color = Color.white;
+        StartCoroutine(HideExpansionPrompt());
+    }
+    
+    IEnumerator HideExpansionPrompt()
+    {
+        yield return new WaitForSeconds(expansionPromptTime);
+        fadeExpansionPrompt = true;
     }
 }
